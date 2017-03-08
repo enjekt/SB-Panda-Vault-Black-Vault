@@ -37,5 +37,5 @@ public interface BlackVaultRepository extends JpaRepository<TokenPadPair, Long> 
 	 */
 	TokenPadPair findByToken(String token);
 
-	
+	void deleteByToken(String token);
 }

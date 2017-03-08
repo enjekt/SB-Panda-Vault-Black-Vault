@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.validation.constraints.Size;
 
 
 /**
@@ -56,8 +59,9 @@ public class BlackVaultRestController {
 	 * @return the Pad - the random number associated with the token. The pad is required to restore the
 	 * PAN in the White Vault.
 	 */
+	@Validated
 	@RequestMapping(value = "/pad/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pad> getPad(@PathVariable("token") long tokenL) {
+	public ResponseEntity<Pad> getPad(@PathVariable("token") @Size(min = 16, max = 116, message = "Token must be of length 16")  long tokenL) {
 		logger.debug("Fetching token with id " + tokenL);
 		Token token = new Token(String.valueOf(tokenL));
 		logger.debug("The token value: " + token.getToken());
@@ -101,8 +105,11 @@ public class BlackVaultRestController {
 	 * @param tokenL the token to use as a key.
 	 */
 	@RequestMapping(value = "/token/{token}", method = RequestMethod.DELETE)
-	public void deleteToken(@PathVariable("token") long tokenL) {
+    @Validated
+	public void deleteToken(@PathVariable("token") @Size(min = 16, max = 116, message = "Token must be of length 16")  long tokenL) {
 		logger.debug("Deleting Token with id " + tokenL);
+		
+		datastore.deleteToken(new Token(tokenL));
 
 	}
 

@@ -54,6 +54,10 @@ public class Token implements Serializable {
 	public Token(String token) {
 		this.token=token;
 	}
+	public Token(long tokenL) {
+		this.token=String.valueOf(tokenL);
+	}
+
 	public String getToken() {
 		return token;
 	}

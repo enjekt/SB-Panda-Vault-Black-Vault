@@ -20,6 +20,8 @@ import org.enjket.panda.blackvault.models.Pad;
 import org.enjket.panda.blackvault.models.Token;
 import org.enjket.panda.blackvault.models.TokenPadPair;
 import org.enjket.panda.blackvault.service.DatabaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("databaseService")
 @Transactional
 public class BlackVaultDatabase implements DatabaseService{
+	
+	private static Logger logger = LoggerFactory.getLogger(BlackVaultDatabase.class);
 
 	/** The JPA repository used to store data */
 	@Autowired
@@ -49,9 +53,9 @@ public class BlackVaultDatabase implements DatabaseService{
 	 */
 	@Override
 	public Pad getPad(Token token) {
-		System.out.println("Get panda for token: "+token.getToken());
+		logger.debug("Get panda for token: "+token.getToken());
 		TokenPadPair pair = repository.findByToken(token.getToken());
-		System.out.println(pair.toString());
+		logger.debug(pair.toString());
 		return new Pad(pair.getPad());
 	}
 
@@ -60,7 +64,7 @@ public class BlackVaultDatabase implements DatabaseService{
 	 */
 	@Override
 	public void deleteToken(Token token) {
-		
+		repository.deleteByToken(token.getToken());
 	}
 
 }
